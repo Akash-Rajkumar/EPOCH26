@@ -1,0 +1,10 @@
+{
+  "event": "crash",
+  "input_id": "0069c730-cb65-4885-8340-08a4d3b5d251",
+  "input_raw": "|+pt[06\nT_6\"\rggECpyP",
+  "minimized_input": "+t0\nT_6\"\rggECpyP",
+  "stack_trace": "Traceback (most recent call last):\n  File \"C:\\Users\\Puttu\\EPOCH26\\target\\parser.py\", line 9, in <module>\n    raise Exception(\"Length crash!\")\nException: Length crash!\n",
+  "crash_type": "python_exception",
+  "severity": "low",
+  "timestamp": 1777649209.4578862
+}
