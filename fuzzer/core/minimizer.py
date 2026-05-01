@@ -8,8 +8,8 @@ def minimize(target, input_data):
         result = run_target(target, test)
 
         if result["crashed"]:
-            print(f"Reduced → {repr(test)}")
+            print(f"Reduced -> {repr(test)}")
             data = test
 
-    print(f"✅ Final minimized input: {repr(data)}")
+    print(f"Final minimized input: {repr(data)}")
     return data

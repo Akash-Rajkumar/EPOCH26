@@ -106,10 +106,10 @@ try {
 
 
 
-  console.log("FULL RESPONSE:", response);
+
 
   const text = response.choices[0]?.message?.content || "";
-  console.log("LLM TEXT:", text);
+
 
 
 
