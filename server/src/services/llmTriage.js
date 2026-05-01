@@ -40,7 +40,7 @@ function cleanText(text) {
   return null;
 }
 
-export async function generateLLMTriage(crash) {
+export async function generateTriage(crash) {
 const prompt = `
 You are a senior security engineer specializing in crash analysis and vulnerability triage.
 

@@ -5,7 +5,7 @@ import {
   saveChain,
   updateSession
 } from './supabaseService.js';
-import { generateTriage } from './triageService.js';
+import { generateTriage } from './llmTriage.js';
 import { saveTriage } from './supabaseService.js';
 
 let fuzzerProcess = null;
@@ -70,10 +70,16 @@ async function handleEvent(event) {
         // 🔥 Phase 4 — Triage hook
         (async () => {
             try {
+                console.log("🧠 Calling LLM...");
+
                 const triage = await generateTriage(crash);
+
+                console.log("🧠 TRIAGE RESULT:", triage);
+
                 await saveTriage(crash.id, triage);
+
             } catch (err) {
-                console.error('⚠️ Triage failed:', err.message);
+                console.error("❌ Triage failed:", err.message);
             }
         })();
     }

@@ -5,7 +5,10 @@ import crypto from 'crypto';
 export async function saveCrash(event) {
   const stack_hash = crypto
     .createHash('sha256')
-    .update((event.stack_trace || '') + (event.input_raw || ''))
+    .update(
+      (event.stack_trace || '') +
+      (event.input_raw || '') 
+    )
     .digest('hex')
     .slice(0, 16);
 
