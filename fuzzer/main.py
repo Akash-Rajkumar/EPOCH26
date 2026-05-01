@@ -12,7 +12,7 @@ def main():
     args = parser.parse_args()
 
     print(f"Target: {args.target}")
-    print("Iterations: ∞")
+    print("Iterations: infinity")
 
     # ✅ Updated engine initialization
     engine = FuzzerEngine(args.target)
