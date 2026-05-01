@@ -1,15 +1,20 @@
 import { Router } from 'express';
+import { startFuzzer, stopFuzzer } from '../services/fuzzerProcess.js';
 
 const router = Router();
 
-// Start fuzzer (placeholder for now)
 router.post('/start', (req, res) => {
-  res.json({ status: 'fuzzer start placeholder' });
+  try {
+    startFuzzer();
+    res.json({ status: 'fuzzer started' });
+  } catch (err) {
+    res.status(400).json({ error: err.message });
+  }
 });
 
-// Stop fuzzer
 router.post('/stop', (req, res) => {
-  res.json({ status: 'fuzzer stop placeholder' });
+  stopFuzzer();
+  res.json({ status: 'fuzzer stopped' });
 });
 
 export default router;

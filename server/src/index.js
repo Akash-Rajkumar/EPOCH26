@@ -7,6 +7,7 @@ import dotenv from 'dotenv';
 import fuzzerRoutes from './routes/fuzzer.js';
 import crashRoutes from './routes/crashes.js';
 import sessionRoutes from './routes/sessions.js';
+import { supabase } from './lib/supabase.js';
 
 dotenv.config();
 
@@ -31,6 +32,14 @@ app.use('/sessions', sessionRoutes);
 // Health check route
 app.get('/', (req, res) => {
   res.json({ status: 'FuzzForge API running 🚀' });
+});
+
+// Supabase Temp test
+app.get('/test-db', async (req, res) => {
+  const { data, error } = await supabase.from('sessions').select('*');
+
+  if (error) return res.status(500).json(error);
+  res.json(data);
 });
 
 // Socket connection test
