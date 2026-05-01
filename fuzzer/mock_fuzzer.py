@@ -33,7 +33,7 @@ while True:
             "type": "crash",
             "session_id": session_id,
             "input_raw": "deadbeef",
-            "stack_trace": "Segmentation fault",
+            "stack_trace": f"Segmentation fault {count}",
             "crash_type": "null_deref",
             "severity": "high",
             "chain": [
