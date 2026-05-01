@@ -1,15 +1,20 @@
 import { spawn } from 'child_process';
 import { io } from '../index.js';
+import {
+  saveCrash,
+  saveChain,
+  updateSession
+} from './supabaseService.js';
 
 let fuzzerProcess = null;
 
-export function startFuzzer() {
+export function startFuzzer({ sessionId }) {
   if (fuzzerProcess) {
     throw new Error('Fuzzer already running');
   }
 
   // IMPORTANT: adjust path if needed
-  fuzzerProcess = spawn('python', ['../fuzzer/mock_fuzzer.py']);
+  fuzzerProcess = spawn('python', ['../fuzzer/mock_fuzzer.py', sessionId]);
 
   let buffer = '';
 
@@ -47,9 +52,21 @@ export function stopFuzzer() {
   }
 }
 
-function handleEvent(event) {
+async function handleEvent(event) {
   console.log('📩 EVENT:', event);
 
-  // send to frontend (future)
+  // Send to frontend
   io.emit('fuzzer_event', event);
+
+  if (event.type === 'crash') {
+    const crash = await saveCrash(event);
+
+    if (crash?.id) {
+      await saveChain(crash.id, event.chain);
+    }
+  }
+
+  if (event.type === 'metrics') {
+    await updateSession(event.session_id || 'test-session', event);
+  }
 }

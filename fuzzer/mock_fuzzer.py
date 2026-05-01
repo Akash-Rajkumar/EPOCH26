@@ -1,8 +1,9 @@
 import json
 import time
 import random
+import sys
 
-session_id = "test-session"
+session_id = sys.argv[1] if len(sys.argv) > 1 else "test-session"
 
 def emit(event):
     print(json.dumps(event), flush=True)
