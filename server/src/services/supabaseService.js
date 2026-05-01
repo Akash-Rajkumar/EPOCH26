@@ -5,7 +5,7 @@ import crypto from 'crypto';
 export async function saveCrash(event) {
   const stack_hash = crypto
     .createHash('sha256')
-    .update(event.stack_trace || event.input_raw || '')
+    .update((event.stack_trace || '') + (event.input_raw || ''))
     .digest('hex')
     .slice(0, 16);
 
@@ -78,5 +78,21 @@ export async function updateSession(sessionId, metrics) {
 
   if (error) {
     console.error('❌ Error updating session:', error);
+  }
+}
+
+export async function saveTriage(crashId, triage) {
+  const { error } = await supabase
+    .from('triage_notes')
+    .insert({
+      crash_id: crashId,
+      hypothesis: triage.hypothesis,
+      root_cause_category: triage.root_cause_category,
+      suggested_fix: triage.suggested_fix,
+      confidence: triage.confidence,
+    });
+
+  if (error) {
+    console.error('❌ Error saving triage:', error);
   }
 }

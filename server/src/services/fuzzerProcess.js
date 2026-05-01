@@ -5,14 +5,17 @@ import {
   saveChain,
   updateSession
 } from './supabaseService.js';
+import { generateTriage } from './triageService.js';
+import { saveTriage } from './supabaseService.js';
 
 let fuzzerProcess = null;
+let currentSessionId = null;
 
 export function startFuzzer({ sessionId }) {
   if (fuzzerProcess) {
     throw new Error('Fuzzer already running');
   }
-
+  currentSessionId = sessionId;
   // IMPORTANT: adjust path if needed
   fuzzerProcess = spawn('python', ['../fuzzer/mock_fuzzer.py', sessionId]);
 
@@ -62,11 +65,21 @@ async function handleEvent(event) {
     const crash = await saveCrash(event);
 
     if (crash?.id) {
-      await saveChain(crash.id, event.chain);
+        await saveChain(crash.id, event.chain);
+
+        // 🔥 Phase 4 — Triage hook
+        (async () => {
+            try {
+                const triage = await generateTriage(crash);
+                await saveTriage(crash.id, triage);
+            } catch (err) {
+                console.error('⚠️ Triage failed:', err.message);
+            }
+        })();
     }
   }
 
-  if (event.type === 'metrics') {
-    await updateSession(event.session_id || 'test-session', event);
+  if (currentSessionId && event.type === 'metrics') {
+    await updateSession(currentSessionId, event);
   }
 }
