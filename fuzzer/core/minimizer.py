@@ -33,7 +33,7 @@ def minimize(target_cmd, input_data):
             # 🔥 FIX: preserve BOTH type + context signature
             if current_type == best_type and current_sig == best_signature:
                 best = test
-                print(f"Reduced → {repr(best)}")
+                print(f"Reduced -> {repr(best)}")
 
                 i = 0
                 continue

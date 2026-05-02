@@ -2,6 +2,15 @@ import { supabase } from '../lib/supabase.js';
 import { v4 as uuid } from 'uuid';
 import crypto from 'crypto';
 
+function sanitizeInput(str) {
+  if (!str) return str;
+
+  return str
+    .replace(/\u0000/g, '')       // remove null bytes
+    .replace(/[\x00-\x1F\x7F]/g, '') // remove control chars (optional but safe)
+    .slice(0, 1000);              // limit size (optional safety)
+}
+
 export async function saveCrash(event) {
   const stack_hash = crypto
     .createHash('sha256')
@@ -30,10 +39,10 @@ export async function saveCrash(event) {
     .insert({
       id: crashId,
       session_id: event.session_id,
-      input_raw: event.input_raw,
+      input_raw: sanitizeInput(event.input_raw),
       crash_type: event.crash_type,
       severity: event.severity,
-      stack_trace: event.stack_trace,
+      stack_trace: sanitizeInput(event.stack_trace),
       stack_hash,
       exit_code: event.exit_code || null,
       signal_code: event.signal_code || null,
@@ -57,7 +66,7 @@ export async function saveChain(crashId, chain) {
     step_index: step.step_index ?? index,
     generation: step.generation ?? index,
     mutation_type: step.mutation_type,
-    input_snapshot: step.input_snapshot || null,
+    input_snapshot: sanitizeInput(step.input_snapshot) || null,
     parent_id: null,
   }));
 
